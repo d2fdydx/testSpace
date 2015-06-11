@@ -29,183 +29,8 @@
 			}
 		}
 	});
-	var combo = {
-		xtype : 'combo',
-		queryMode : 'remote',
-		fieldLabel : 'Search by name',
-		width : 320,
-		forceSelection : true,
-		displayField : 'name',
-		valueField : 'id',
-		minChars : 1,
-		triggerAction : 'all',
-		store : remoteJsonStore,
-		listConfig : {
-			getInnerTpl : function() {
-				return '<div>{id} </div> <div> {name} </div>';
-			}
 
-		}
-	};
-	// checkboxes ===================
-	var checkboxes = {
-		xtype : 'checkboxgroup',
-		fieldLabel : 'Which do you own',
-		anchor : '100%',
-		items : [ {
-			boxLabel : 'Cat',
-			inputValue : 'cat'
-		}, {
-			boxLabel : 'Dog',
-			inputValue : 'dog'
-		}, {
-			boxLabel : 'Fish',
-			inputValue : 'fish'
-		}, {
-			boxLabel : 'Bird',
-			inputValue : 'bird'
-		} ]
 
-	};
-	var fieldset1 = {
-		xtype : 'fieldset',
-		title : 'Name',
-		flex : 1,
-
-		labelWidth : 60,
-		defaultType : 'field',
-		defaults : {
-			anchor : '-10',
-			msgTarget : 'side',
-			allowBlank : false
-		},
-		items : [ {
-			xtype : 'textfield',
-			fieldLabel : 'First',
-			maskRe : /[a-z]/i,
-			name : 'firstName'
-		}, {
-			fieldLabel : 'Middle',
-			name : 'middle'
-		}, {
-			fieldLabel : 'Last',
-			name : 'lastName'
-		} ]
-	};
-	var fieldset2 = Ext.apply({}, {
-		flex : 1,
-		labelWidth : 30,
-		title : 'Address Information',
-		defaults : {
-			layout : 'column',
-			anchor : '100%'
-		},
-		items : [ {
-			fieldLabel : 'Address',
-			name : 'address'
-		}, {
-			fieldLabel : 'Street',
-			name : 'street'
-		}, {
-			xtype : 'container',
-			items : [ {
-				xtype : 'fieldcontainer',
-				columnWidth : .5,
-				items : [ {
-					xtype : 'textfield',
-					fieldLabel : 'State',
-					name : 'state',
-					labelWidth : 100,
-					width : 150
-				} ]
-			}, {
-				xtype : 'fieldcontainer',
-				columnWidth : .5,
-				items : [ {
-					xtype : 'textfield',
-					fieldLabel : 'Zip',
-					name : 'zip',
-					labelWidth : 30,
-					width : 162
-				} ]
-			} ]
-		} ]
-	}, fieldset1);
-
-	// tabPanel ==============
-
-	var tabs = [ {
-		xtype : 'fieldcontainer',
-		title : 'Phone Numbers',
-		layout : 'form',
-		bodyStyle : 'padding:6px 6px 0',
-		defaults : {
-			xtype : 'textfield',
-			width : 230
-		},
-		items : [ {
-			fieldLabel : 'Home',
-			name : 'home'
-		}, {
-			fieldLabel : 'Business',
-			name : 'business'
-		}, {
-			fieldLabel : 'Mobile',
-			name : 'mobile'
-		}, {
-			fieldLabel : 'Fax',
-			name : 'fax'
-		} ]
-	}, {
-		title : 'Resume',
-		xtype : 'htmleditor',
-		name : 'resume'
-	}, {
-		title : 'Bio',
-		xtype : 'htmleditor',
-		name : 'bio'
-	} ];
-
-	var tabPanel = {
-		xtype : 'tabpanel',
-		flex : 1,
-		activeTab : 0,
-		items : tabs
-
-	}
-
-	var fieldsetContainer = {
-		xtype : 'container',
-		layout : 'hbox',
-		layoutConfig : {
-			align : 'stretch'
-		},
-		items : [ fieldset1, fieldset2 ]
-	};
-
-	var fpItems = [ {
-		fieldLabel : 'Alpha only',
-		allowBlank : false,
-		emptyText : 'This field is empty!',
-		maskRe : /[a-z]/i,
-		msgTarget : 'side'
-	}, {
-		fieldLabel : 'Simple 3 to 7 Chars',
-		allowBlank : false,
-		msgTarget : 'under',
-		minLength : 3,
-		maxLength : 7
-	}, {
-		fieldLabel : 'Special Chars Only',
-		msgTarget : 'qtip',
-		stripCharsRe : /[a-zA-Z0-9]/ig
-	}, {
-		fieldLabel : 'Web Only with VType',
-		vtype : 'url',
-		msgTarget : 'side'
-	}, combo, checkboxes, fieldsetContainer, tabPanel
-
-	];
 
 	var onSuccessOrFail = function(form, action) {
 		var formPanel = Ext.getCmp('myFormPanel');
@@ -217,15 +42,7 @@
 			Ext.MessageBox.alert('Failure', action.result.msg);
 		}
 	};
-	var submitHandler = function() {
-		var formPanel = Ext.getCmp('myFormPanel');
-		formPanel.el.mask('Please wait', 'x-mask-loading');
-		formPanel.getForm().submit({
-			url : 'http://localhost:8080/Spring/spring/submit',
-			success : onSuccessOrFail,
-			failure : onSuccessOrFail
-		});
-	};
+
 	var columns = [ {
 		xtype : 'templatecolumn',
 		header : 'ID',
@@ -267,7 +84,7 @@
 
 	});
 
-	var employeeStore = Ext.create('Ext.data.Store', {
+	var cityStore = Ext.create('Ext.data.Store', {
 		model : 'CityModel',
 
 		proxy : {
@@ -315,7 +132,7 @@
 		loadMask : true,
 		itemId : 'gridItem',
 		selType : 'rowmodel',
-		store : employeeStore,
+		store : cityStore,
 		columns : columns,
 		singleSelect : true,
 		stripeRows : true,
@@ -331,7 +148,7 @@
 		            		   text : 'submit',
 		            		   handler : function(){
 		            			   alert("sync");
-		            			   employeeStore.sync();
+		            			   cityStore.sync();
 		            			   
 		            		   }
 		            	   
@@ -388,7 +205,7 @@
 											alert("not valid");
 											return;
 										}
-										/*employeeStore.load({
+										/*cityStore.load({
 											params : {
 												formData : Ext.encode(oForm
 														.getValues())
@@ -407,7 +224,7 @@
 														.query('#gridItem')[0]
 														.getView().refresh();
 												console.log("refrest");
-												console.log(employeeStore
+												console.log(cityStore
 														.getCount());
 											}
 
@@ -424,7 +241,7 @@
 													.getValues()),
 										    callback: function (opt,suc,response){
 										    	alert(response);
-										    	employeeStore.loadRawData(response);
+										    	cityStore.loadRawData(response);
 										    	Ext.ComponentQuery
 												.query('#gridItem')[0]
 												.getView().refresh();
