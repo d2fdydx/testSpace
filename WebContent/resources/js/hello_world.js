@@ -37,6 +37,52 @@
 			Ext.MessageBox.alert('Failure', action.result.msg);
 		}
 	};
+	 var onDelete = function() {
+         var selected = gridPanel.selModel.getSelection();
+         
+         Ext.MessageBox.confirm(
+                 'Confirm delete',
+                 'Are you sure?',
+                 function(btn) {
+                     if (btn == 'yes') {
+                         gridPanel.store.remove(selected);
+                         console.log(gridPanel.store);
+                         console.log(gridPanel.store.getRemovedRecords( ));
+                        // grid.store.sync();
+                     }
+                 }
+         );
+     };
+
+     var onInsertRecord = function() {
+         var selected = gridPanel.selModel.getSelection();
+         console.log("selected index:%o", selected[0].index);
+       //  rowEditing.cancelEdit();
+       //  var newEmployee = Ext.create("Employee");
+        // employeeStore.insert(selected[0].index, newEmployee);
+       //  rowEditing.startEdit(selected[0].index, 0);
+     };
+
+     var doRowCtxMenu = function(view, record, item, index, e) {
+         e.stopEvent();
+
+         if (!gridPanel.rowCtxMenu) {
+        	 gridPanel.rowCtxMenu = new Ext.menu.Menu({
+                 items : [
+                     {
+                         text    : 'Insert Record',
+                         handler : onInsertRecord
+                     },
+                     {
+                         text    : 'Delete Record',
+                         handler : onDelete
+                     }
+                 ]
+             });
+         }
+         gridPanel.selModel.select(record);
+         gridPanel.rowCtxMenu.showAt(e.getXY());
+     };
 
 	var columns = [ {
 		xtype : 'templatecolumn',
@@ -142,40 +188,41 @@
 
 	});
 
-	var gridPanel = {
-		xtype : 'grid',
+	var gridPanel = Ext.create('Ext.grid.Panel',{
+		
 		loadMask : true,
 		itemId : 'gridItem',
-		selType : 'rowmodel',
+		selType : 'checkboxmodel',
 		store : cityStore,
 		columns : columns,
 		singleSelect : true,
 		stripeRows : true,
 		plugins : [ Ext.create('Ext.grid.plugin.CellEditing', {
-			clicksToEdit : 1
+			clicksToEdit :2 
 		}) ],
-
+		listeners  : {
+            itemcontextmenu : doRowCtxMenu,
+            destroy         : function(thisGrid) {
+                if (thisGrid.rowCtxMenu) {
+                    thisGrid.rowCtxMenu.destroy();
+                }
+            }
+        },
 		dockedItems : [ {
 			xtype : 'toolbar',
 			items : [ {
 				xtype : 'button',
-				text : 'submit',
-				handler : function() {
-					alert("sync");
-					cityStore.sync();
-
-				}
+				text : 'delete',
+				handler : onDelete
 
 			} ]
 		}
 
 		]
-	};
+	});
 
-	Ext
-			.application({
-
-				launch : function() {
+	Ext.onReady(function(){
+				
 
 					var fp = Ext
 							.create(
@@ -325,7 +372,7 @@
     allowBlank: false
 }
 					 */
-				}
+				
 			});
 
 })();
