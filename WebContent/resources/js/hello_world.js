@@ -136,13 +136,15 @@
 			api : {
 
 				read : '/Spring/spring/submit',
-				update : '/Spring/spring/submit'
+				update : '/Spring/spring/update',
+				destroy : '/Spring/spring/delete'
 
 			},
 			actionMethods : {
 
 				read : 'POST',
-				update : 'POST'
+				update : 'POST',
+				destroy: 'POST'
 
 			},
 			reader : {
@@ -163,7 +165,7 @@
 					var wrapper = {
 						formData : data
 					};
-					request.jsonData = wrapper;
+					request.params= Ext.encode(wrapper);
 					return request;
 				}
 			}
@@ -214,7 +216,25 @@
 				xtype : 'button',
 				text : 'delete',
 				handler : onDelete
-
+			
+			}, {
+				xtype: 'button',
+				text: 'sync',
+				handler : function(){
+					cityStore.sync({
+						
+						success: function(){
+							alert("hi");
+						},
+						failure: function(batch){
+							alert("fail");
+							console.log(batch.exceptions);
+							console.log(batch.operations);
+						}
+						
+					});
+				}
+				
 			} ]
 		}
 

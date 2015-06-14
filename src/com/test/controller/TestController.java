@@ -60,6 +60,25 @@ public class TestController {
 		return service;
 		
 	}
+
+	@RequestMapping(value = "/update",method={RequestMethod.POST})	
+	public @ResponseBody Service update(@RequestBody String json) {
+		
+		System.out.println("update");
+		Service service = new Service();
+		return service;
+		
+	}	
+	@RequestMapping(value = "/delete",method={RequestMethod.POST})	
+	public @ResponseBody Service delete(@RequestBody String json) {
+		
+		System.out.println("update");
+		Service service = new Service();
+		service.setSuccess(false);
+		return service;
+		
+	}	
+	
 	/*
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
