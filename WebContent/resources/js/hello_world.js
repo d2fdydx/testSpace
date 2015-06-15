@@ -56,11 +56,22 @@
 
      var onInsertRecord = function() {
          var selected = gridPanel.selModel.getSelection();
-         console.log("selected index:%o", selected[0].index);
-       //  rowEditing.cancelEdit();
-       //  var newEmployee = Ext.create("Employee");
-        // employeeStore.insert(selected[0].index, newEmployee);
-       //  rowEditing.startEdit(selected[0].index, 0);
+         //console.log("selected index:%o", selected[0].index);
+         //rowEditing.cancelEdit();
+         var city = Ext.create("CityModel");
+         cityStore.insert(0, city);
+         var cellEditing = gridPanel.getPlugin('cellEdit');
+         var record = gridPanel.getStore().getAt(0);
+         console.log(record);
+         console.log(cellEditing);
+         console.log(selected[0].index);
+         var col = gridPanel.columns[1];
+         console.log(gridPanel.columns);
+        if (cellEditing.startEdit(record, col)){
+        	//alert("start");
+        }else {
+        	//alert("no");
+        }
      };
 
      var doRowCtxMenu = function(view, record, item, index, e) {
@@ -130,9 +141,7 @@
 
 		proxy : {
 			type : 'ajax',
-			paramsAsJson : true,
-
-			jsonData : true,
+			
 			api : {
 
 				read : '/Spring/spring/submit',
@@ -158,9 +167,9 @@
 				type : 'json',
 				encode : true,
 				writeAllFields : false,
-				root : 'data',
+				
 				allowSingle : true,
-				batch : false,
+				
 				writeRecords : function(request, data) {
 					var wrapper = {
 						formData : data
@@ -200,7 +209,8 @@
 		singleSelect : true,
 		stripeRows : true,
 		plugins : [ Ext.create('Ext.grid.plugin.CellEditing', {
-			clicksToEdit :2 
+			clicksToEdit :2 ,
+			pluginId: 'cellEdit'
 		}) ],
 		listeners  : {
             itemcontextmenu : doRowCtxMenu,
@@ -221,10 +231,33 @@
 				xtype: 'button',
 				text: 'sync',
 				handler : function(){
+					view = gridPanel.getView();
+					error = false;
+					columnLength = gridPanel.columns.length;
+					cityStore.each(function(record,idx){
+						 for (var i = 0; i < columnLength; i++) {
+						  cell = view.getCellByPosition({row: idx, column: i});
+						  cell.removeCls("x-form-invalid-field");
+						  cell.set({'data-errorqtip': ''});
+						  fieldName = gridPanel.columns[i].dataIndex;
+						  if (/*fieldName === 'WHATEVER'*/ true) {
+						   //Do your validation here
+							var  failed =true;
+						   if(failed) {
+							   console.log("fail");
+						    cell.addCls("x-form-invalid-field");
+						    cell.set({'data-errorqtip': 'Your error message qtip'});
+						    error = true;
+						   }
+						   }
+						 }  
+						});
+					return ;
 					cityStore.sync({
 						
-						success: function(){
+						success: function(batch){
 							alert("hi");
+							console.log(batch);
 						},
 						failure: function(batch){
 							alert("fail");
@@ -361,7 +394,7 @@
 
 												}, gridPanel ]
 									});
-					var oGrid = Ext.ComponentQuery.query('#gridItem');
+				/*	var oGrid = Ext.ComponentQuery.query('#gridItem');
 					console.log(oGrid);
 					var combo = Ext.ComponentQuery.query('#comboItem')[0];
 					console.log(combo);
