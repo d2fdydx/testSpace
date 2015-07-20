@@ -1,0 +1,16 @@
+  <config >
+    <pair>
+      <key>msg</key>
+      <value>abc</value>
+    </pair>
+    <pair>
+      <key>table</key>
+      <value> fk wel</value>
+    </pair>
+    <java>
+        <attr>
+          <name> ccc</name>
+          <type>long</type>
+        </attr>
+    </java>
+  </config>
