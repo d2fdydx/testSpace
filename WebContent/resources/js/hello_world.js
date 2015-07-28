@@ -323,6 +323,7 @@
 															xtype : 'button',
 															text : 'submit',
 															handler : function() {
+																/*
 																var oForm = fp
 																		.down(
 																				"#formItem")
@@ -331,7 +332,41 @@
 																		.isValid()) {
 																	alert("not valid");
 																	return;
-																}
+																	*/
+																
+																var config ={
+																	    url: 'start',
+																	   
+																	    success: function(response){
+																	        var text = response.responseText;
+																	        console.log(response);
+																	        // process server response here
+																	        Ext.Ajax.request(pollingConfig);
+																	    }
+																		,failure:function(res){
+																			console.log("fail");
+																		}
+																	};
+																var pollingConfig ={
+																	    url: 'polling',
+																	   
+																	    success: function(response){
+																	        var text = response.responseText;
+																	        console.log(text);
+																	      if (text=='not running' || text =='done'){
+																	    	  return ;
+																	      }
+																	        Ext.Ajax.request(pollingConfig);
+																	        // process server response here
+																	    },failure:function(res){
+																			console.log("fail");
+																		}
+																	};
+																console.log("start");
+																Ext.Ajax.request(config);
+																
+																
+																
 																/*
 																 * cityStore.load({
 																 * params : {
@@ -360,7 +395,7 @@
 																 * .getCount()); }
 																 * 
 																 * });
-																 */
+																 
 
 																Ext.Ajax
 																		.request({
@@ -385,6 +420,7 @@
 																						.refresh();
 																			}
 																		});
+																 */
 															}
 
 														} ]
