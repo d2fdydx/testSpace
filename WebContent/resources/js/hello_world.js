@@ -333,7 +333,7 @@
 																	alert("not valid");
 																	return;
 																	*/
-																
+															/*	
 																var config ={
 																	    url: 'start',
 																	   
@@ -365,8 +365,21 @@
 																console.log("start");
 																Ext.Ajax.request(config);
 																
-																
-																
+																*/
+																try {
+																    var request = new XMLHttpRequest(); 
+																} catch (e) {
+																    alert("Browser doesn't support window.XMLHttpRequest");
+																}
+																var pos = 0; // 記下目前的輸出總長度
+																request.onreadystatechange = function () {
+																    if (request.readyState === 3) { // 在 Interactive 模式就得處理
+																        var text = request.responseText; 
+																        console.log(text);
+																    }
+																};
+																request.open("GET", "keep", true); // 傳統的作法，但因 PHP 的特殊處理讓它不會中斷
+																request.send(null);
 																/*
 																 * cityStore.load({
 																 * params : {

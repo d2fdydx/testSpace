@@ -13,11 +13,11 @@ import com.test.model.City;
 import com.test.model.Service;
 
 @Controller
-public class TestController {
+public class #{test}#{name}Controller {
 
 	@RequestMapping("/index")
 	public ModelAndView index() {
-		return new ModelAndView("#{  msg}");
+		return new ModelAndView("#{   test}");
 
 	}
 

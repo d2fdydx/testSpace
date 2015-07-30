@@ -1,5 +1,8 @@
 package com.test.controller;
 
+import java.io.IOException;
+
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,6 +33,7 @@ public class PollingController {
 	@RequestMapping("/start")
 	public @ResponseBody String startTask(HttpServletRequest request,
             HttpServletResponse response){
+		
 		System.out.println(getFile().hashCode());
 		if (!getFile().start()){
 			return "fail";
@@ -41,6 +45,27 @@ public class PollingController {
 	public @ResponseBody  DeferredResult<String >  polling(HttpServletRequest request,
             HttpServletResponse response){
 		return getFile().checkCompleted();
+	}
+	
+	@RequestMapping("/keep")
+	public void keepWrite (HttpServletRequest request,
+            HttpServletResponse response) throws IOException{
+		ServletOutputStream out = response.getOutputStream();
+
+		for (int i =0 ; i <20 ; i++){
+			System.out.println(i);
+			String str="a";
+			out.write(str.getBytes());
+			out.flush();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		out.close();
+		
 	}
 	
 }
