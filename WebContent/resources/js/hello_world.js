@@ -364,8 +364,13 @@
 																	};
 																console.log("start");
 																Ext.Ajax.request(config);
-																
+																	url: 'polling',
 																*/
+															/*	Ext.Ajax.request({
+																	url: 'keep',
+																	method:'POST',
+																	params:{data:"hihi"}
+																});*/
 																try {
 																    var request = new XMLHttpRequest(); 
 																} catch (e) {
@@ -378,8 +383,13 @@
 																        console.log(text);
 																    }
 																};
-																request.open("GET", "keep", true); // 傳統的作法，但因 PHP 的特殊處理讓它不會中斷
-																request.send(null);
+																var params ="data=hihihi";
+																
+																
+																request.open("POST", "keep", true); // 傳統的作法，但因 PHP 的特殊處理讓它不會中斷
+																request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+																request.setRequestHeader("Content-length", params.length);
+																request.send(params);
 																/*
 																 * cityStore.load({
 																 * params : {

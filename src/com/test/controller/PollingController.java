@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -47,9 +49,13 @@ public class PollingController {
 		return getFile().checkCompleted();
 	}
 	
-	@RequestMapping("/keep")
+	@RequestMapping(value ="/keep",method = RequestMethod.POST)
 	public void keepWrite (HttpServletRequest request,
-            HttpServletResponse response) throws IOException{
+            HttpServletResponse response,@RequestParam(value="data") String data) throws IOException{
+		
+		for (Object s : request.getParameterMap().keySet()){
+			System.out.println(s);
+		}
 		ServletOutputStream out = response.getOutputStream();
 
 		for (int i =0 ; i <20 ; i++){
